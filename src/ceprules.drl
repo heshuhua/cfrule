@@ -1,0 +1,31 @@
+package com.pactera.cfrule.sample
+
+import com.pactera.cfrule.model.Transaction;
+import com.pactera.cfrule.service.CEPHandler;
+
+declare Transaction
+	@role(event)
+end
+
+
+/* 在10分钟内，交易地点为异地，两比交易被视为可疑交易  */
+rule "10 minitus 2 address"
+	when
+		 $trans : Transaction()  from entry-point "transaction"
+		$trans2: Transaction(this!=$trans ,this.transAddress!=$trans.transAddress, this before[0m,1m] $trans ) from entry-point "transaction" 
+	then
+		System.out.println($trans.getTransactionId()+" need review1"+$trans.getTransAddress());
+		System.out.println($trans2.getTransactionId()+" need review2"+$trans2.getTransAddress());
+		CEPHandler.sendtoWarn(kcontext.getRule().getName()+":{"+$trans.getTransactionId()+"_"+$trans.getTransAddress()+"and"+$trans2.getTransactionId()+"_"+$trans2.getTransAddress()+"}");
+		
+end
+
+/* 日常生活物品卡，超过 30天交易平均额 300% 的 交易为可疑交易 */
+rule "2 big transactions"
+	when
+	
+	then
+end
+
+ 
+
