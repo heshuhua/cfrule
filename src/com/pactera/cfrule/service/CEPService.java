@@ -1,6 +1,7 @@
 package com.pactera.cfrule.service;
 
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -21,6 +22,7 @@ public class CEPService {
 	
 	public CEPService(CachingConnectionFactory connectionFactory,AmqpTemplate amqpTemplate,SimpleMessageListenerContainer container) {
 		System.out.println("cep service loaded");
+		
 		//container.setConnectionFactory(connectionFactory);
 		container.setQueueNames("monqueue");
 		

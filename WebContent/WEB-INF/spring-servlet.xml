@@ -23,17 +23,25 @@
 	<context:component-scan base-package="com.pactera" />
 
 	<!-- Obtain a connection to the RabbitMQ via cloudfoundry-runtime: -->
-	<cloud:rabbit-connection-factory id="connectionFactory" />
+	<cloud:rabbit-connection-factory id="connectionFactory" /> 
 
-	<!-- <rabbit:connection-factory id="connectionFactory" host="192.168.136.145" 
-		username="guest" password="guest" port="5672"/> -->
+	<!-- <rabbit:connection-factory id="connectionFactory" host="192.168.136.146" 
+		username="guest" password="guest" port="5672"/>  -->
 		
 
 
 	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
 
-
+	<rabbit:admin id="amqpAdmin" connection-factory="connectionFactory"/>
+	
+	<rabbit:queue id="monqueue" name="monqueue"></rabbit:queue>
+	
+	<rabbit:fanout-exchange name="norexchange" durable="false">
+	<rabbit:bindings>
+	<rabbit:binding queue="monqueue"></rabbit:binding>
+	</rabbit:bindings>
+	</rabbit:fanout-exchange>
 	
 	<bean id="container" class="org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer">
 	<property name="connectionFactory" ref="connectionFactory" />
